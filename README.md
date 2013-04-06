@@ -27,26 +27,26 @@ A set of multiple puzzles. Each puzzle is defined on a separate line of 81 chars
     000000010400000000020000000000050407008000300001090000300400200050100000000806000
     000000010400000000020000000000050604008000300001090000300400200050100000000807000
 
-# Building
+# Running the Solvers
 
-	  $ export GOPATH=$PWD
+There are 3 variants of the solvers. Make sure to set your `GOPATH` before running
 
-# Single puzzle solver
+    $ export GOPATH=$PWD
+
+## Single puzzle solver
 
 Solves a single puzzle
 
-	  $ go run sudoku.go puzzles/p1
+    $ go run sudoku.go puzzles/p1
 
-# Multiple puzzle solver
+## Multiple puzzle solver
 
 Solves multiple puzzles sequentially
 
-	  $ export GOPATH=$PWD
-	  $ go run sudoku_batch.go set/hard.gz
+	$ go run sudoku_batch.go set/hard.gz
 
-# Parallel puzzle solver
+## Parallel puzzle solver
 
 Uses multiple goroutines to solve puzzles in parallel
 
-	  $ export GOPATH=$PWD
-	  $ go run sudoku_batch.go set/hard.gz
+	$ go run sudoku_batch.go set/hard.gz
