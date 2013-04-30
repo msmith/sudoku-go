@@ -11,27 +11,32 @@ import (
 	"runtime"
 )
 
-func solver(in <-chan *sudoku.Board, out chan<- *sudoku.Board, done chan bool) {
+func solver(in <-chan *sudoku.Board, out chan<- *sudoku.Solution, done chan bool) {
 	for b := range in {
+		start := time.Now()
 		b2, _ := b.Solve()
-		out <- &b2
+		t := time.Since(start)
+
+		solution := sudoku.Solution{b, &b2, t}
+
+		out <- &solution
 	}
 	done <- true
 }
 
-func collectResults(boards chan *sudoku.Board) {
+func collectResults(solutions chan *sudoku.Solution) {
 	var count int64
 	start := time.Now()
-	for b := range boards {
+	for s := range solutions {
 		count++
-		fmt.Println(b.ShortString())
+		fmt.Println(s)
 	}
 	elapsed := time.Since(start)
 	rate := (float64(count) / elapsed.Seconds())
-	fmt.Printf("Solved %v (%0.2f per second)\n", count, rate)
+	fmt.Printf("Solved %v puzzles in %v (%0.2f per second)\n", count, elapsed, rate)
 }
 
-func waitForDone(workers int, done chan bool, toClose chan *sudoku.Board) {
+func waitForDone(workers int, done chan bool, toClose chan *sudoku.Solution) {
 	for i := 0; i < workers; i++ {
 		<- done
 	}
@@ -51,6 +56,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer file.Close()
 
 	gz_reader, err := gzip.NewReader(file)
 	if err != nil {
@@ -62,7 +68,7 @@ func main() {
 	runtime.GOMAXPROCS(workers)
 
 	unsolved := make(chan *sudoku.Board)
-	solved := make(chan *sudoku.Board)
+	solved := make(chan *sudoku.Solution)
 	done := make(chan bool)
 
 	for i := 0; i < workers; i++ {
@@ -83,6 +89,4 @@ func main() {
 	go waitForDone(workers, done, solved)
 
 	collectResults(solved)
-
-	file.Close()
 }

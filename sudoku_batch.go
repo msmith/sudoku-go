@@ -30,6 +30,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer file.Close()
 
 	gz_reader, err := gzip.NewReader(file)
 	if err != nil {
@@ -46,14 +47,17 @@ func main() {
 			break;
 		}
 		count++
-		b2, _ := b.Solve()
 
-		fmt.Println(b2.ShortString())
+		boardStart := time.Now()
+		b2, _ := b.Solve()
+		t := time.Since(boardStart)
+
+		solution := sudoku.Solution{&b, &b2, t}
+
+		fmt.Println(solution.String())
 	}
 
 	elapsed := time.Since(start)
 	rate := (float64(count) / elapsed.Seconds())
-	fmt.Printf("Solved %v (%0.2f per second)\n", count, rate)
-
-	file.Close()
+	fmt.Printf("Solved %v puzzles in %v (%0.2f per second)\n", count, elapsed, rate)
 }
