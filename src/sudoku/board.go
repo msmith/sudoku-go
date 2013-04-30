@@ -16,20 +16,36 @@ type Board struct {
 }
 
 var Peers [][]int
+var Groups [][]int
 
 func init() {
+	by_row := make([][]int, DIM2)
+	by_col := make([][]int, DIM2)
+	by_region := make([][]int, DIM2)
+
+	for i := 0; i < DIM2; i++ {
+		by_row[i] = make([]int, 0, DIM2)
+		by_col[i] = make([]int, 0, DIM2)
+		by_region[i] = make([]int, 0, DIM2)
+	}
+
+	// init Peers
 	Peers = make([][]int, SZ)
 	for i := 0; i < SZ; i++ {
 		row_i := i / DIM2
 		col_i := i % DIM2
-		region_i := (row_i / DIM) * DIM + (col_i / DIM)
+		region_i := (row_i/DIM)*DIM + (col_i / DIM)
+
+		by_row[row_i] = append(by_row[row_i], i)
+		by_col[col_i] = append(by_col[col_i], i)
+		by_region[region_i] = append(by_region[region_i], i)
 
 		ps := make([]int, 0, 20)
 
 		for j := 0; j < SZ; j++ {
 			row := j / DIM2
 			col := j % DIM2
-			region := (row / DIM) * DIM + (col / DIM)
+			region := (row/DIM)*DIM + (col / DIM)
 
 			if (j != i) && (row == row_i || col == col_i || region == region_i) {
 				ps = append(ps, j)
@@ -37,6 +53,18 @@ func init() {
 		}
 
 		Peers[i] = ps
+	}
+
+	// init Groups
+	Groups = make([][]int, 0, DIM2*3)
+	for _, cells := range by_row {
+		Groups = append(Groups, cells)
+	}
+	for _, cells := range by_col {
+		Groups = append(Groups, cells)
+	}
+	for _, cells := range by_region {
+		Groups = append(Groups, cells)
 	}
 }
 
@@ -126,6 +154,33 @@ func (b *Board) Solve() (Board, bool) {
 		return *b, true
 	}
 
+	// check groups of peers to look for a value that only appears once
+	for _, group := range Groups {
+		idx := -1
+		for v := 1; v <= DIM2; v++ {
+			count := 0
+			for _, c_idx := range group {
+				c := b.Cells[c_idx]
+				if !c.Solved && c.Possible(v) {
+					count++
+					if count == 1 {
+						idx = c_idx
+					}
+				}
+			}
+			if count == 1 {
+				b2 := b.Set(idx, v)
+				s, valid := b2.Solve()
+				if valid {
+					return s, true
+				} else {
+					return s, false
+				}
+			}
+		}
+	}
+
+	// guess
 	c_idx := b.PickUnsolvedCell()
 	c := b.Cells[c_idx]
 	for v := 1; v <= DIM2; v++ {
