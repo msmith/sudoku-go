@@ -88,10 +88,12 @@ func (b *Board) PickUnsolvedCell() int {
 	idx := -1
 	num_possible := DIM2 + 1
 	for i, c := range b.Cells {
-		n := c.NumPossible()
-		if (!c.Solved && n < num_possible) {
-			idx = i
-			num_possible = n
+		if !c.Solved {
+			n := c.NumPossible()
+			if (n < num_possible) {
+				idx = i
+				num_possible = n
+			}
 		}
 	}
 	return idx
