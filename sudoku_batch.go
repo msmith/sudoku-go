@@ -47,11 +47,13 @@ func main() {
 		}
 		count++
 		b2, _ := b.Solve()
-		elapsed := time.Since(start)
-		rate := (float64(count) / elapsed.Seconds())
-		fmt.Println(b2.String())
-		fmt.Printf("Solved %v (%0.2f per second)\n", count, rate)
+
+		fmt.Println(b2.ShortString())
 	}
+
+	elapsed := time.Since(start)
+	rate := (float64(count) / elapsed.Seconds())
+	fmt.Printf("Solved %v (%0.2f per second)\n", count, rate)
 
 	file.Close()
 }

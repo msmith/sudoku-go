@@ -24,11 +24,11 @@ func collectResults(boards chan *sudoku.Board) {
 	start := time.Now()
 	for b := range boards {
 		count++
-		elapsed := time.Since(start)
-		rate := (float64(count) / elapsed.Seconds())
-		fmt.Printf("Solved %v (%0.2f per second)\n", count, rate)
-		fmt.Println(b.String())
+		fmt.Println(b.ShortString())
 	}
+	elapsed := time.Since(start)
+	rate := (float64(count) / elapsed.Seconds())
+	fmt.Printf("Solved %v (%0.2f per second)\n", count, rate)
 }
 
 func waitForDone(workers int, done chan bool, toClose chan *sudoku.Board) {
