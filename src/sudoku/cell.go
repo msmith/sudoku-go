@@ -2,7 +2,7 @@ package sudoku
 
 type Cell struct {
 	Possibles []bool
-	Solved bool
+	Solved    bool
 }
 
 func (c *Cell) Assign(val int) {
@@ -15,7 +15,7 @@ func (c *Cell) Assign(val int) {
 func (c *Cell) Value() int {
 	for v, p := range c.Possibles {
 		if p {
-			return (v+1)
+			return (v + 1)
 		}
 	}
 	return 0
@@ -56,7 +56,7 @@ func (c *Cell) Copy() Cell {
 }
 
 func NewCell() Cell {
-	cell := &Cell { make([]bool, DIM2), false }
+	cell := &Cell{make([]bool, DIM2), false}
 	for v := 0; v < DIM2; v++ {
 		cell.Possibles[v] = true
 	}

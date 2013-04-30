@@ -1,14 +1,14 @@
 package sudoku
 
 import (
-	"strconv"
 	"bytes"
+	"strconv"
 )
 
 const (
-	DIM = 3
+	DIM  = 3
 	DIM2 = DIM * DIM
-	SZ = DIM2 * DIM2
+	SZ   = DIM2 * DIM2
 )
 
 type Board struct {
@@ -83,7 +83,7 @@ func (b *Board) Eliminate(idx int, val int) {
 
 func NewBoard() Board {
 	// initialize Board
-	board := &Board{ make([]Cell, SZ) }
+	board := &Board{make([]Cell, SZ)}
 	for i := 0; i < SZ; i++ {
 		board.Cells[i] = NewCell()
 	}
@@ -91,7 +91,7 @@ func NewBoard() Board {
 }
 
 func (b *Board) Copy() Board {
-	newBoard := &Board{ make([]Cell, SZ) }
+	newBoard := &Board{make([]Cell, SZ)}
 	for i := 0; i < SZ; i++ {
 		newBoard.Cells[i] = b.Cells[i].Copy()
 	}
@@ -99,7 +99,7 @@ func (b *Board) Copy() Board {
 }
 
 func indexOf(row, col int) int {
-	return row * DIM2 + col
+	return row*DIM2 + col
 }
 
 func posOf(idx int) (row, col int) {
@@ -118,7 +118,7 @@ func (b *Board) PickUnsolvedCell() int {
 	for i, c := range b.Cells {
 		if !c.Solved {
 			n := c.NumPossible()
-			if (n < num_possible) {
+			if n < num_possible {
 				idx = i
 				num_possible = n
 			}
@@ -200,10 +200,10 @@ func (b *Board) String() string {
 
 	for l := 0; l < DIM; l++ {
 		for k := 0; k < DIM; k++ {
-			row := l * DIM + k
+			row := l*DIM + k
 			for i := 0; i < DIM; i++ {
 				for j := 0; j < DIM; j++ {
-					col := i * DIM + j
+					col := i*DIM + j
 					idx := indexOf(row, col)
 					cell := b.Cells[idx]
 					var ch string
@@ -253,16 +253,16 @@ func (b *Board) DebugString() string {
 			cell := b.Cells[idx]
 			var ch string
 			for v := 1; v <= DIM2; v++ {
-				if (cell.Possible(v)) {
+				if cell.Possible(v) {
 					ch = strconv.Itoa(v)
 				} else {
-					if (cell.Solved) {
+					if cell.Solved {
 						ch = "-"
 					} else {
 						ch = "."
 					}
 				}
-			buffer.WriteString(ch)
+				buffer.WriteString(ch)
 			}
 			buffer.WriteString(" ")
 		}

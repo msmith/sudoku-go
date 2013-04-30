@@ -1,9 +1,9 @@
 package sudoku
 
 import (
-	"strconv"
 	"bufio"
 	"errors"
+	"strconv"
 )
 
 // read a board where each row is on a separate line
@@ -41,7 +41,7 @@ func ReadBoardLine(reader *bufio.Reader) (Board, error) {
 	for i := 0; i < SZ; i++ {
 		ch := str[i : i+1]
 		val, _ := strconv.Atoi(ch)
-		if (val > 0) {
+		if val > 0 {
 			board = board.Set(i, val)
 		}
 	}
