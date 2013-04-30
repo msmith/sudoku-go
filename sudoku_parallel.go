@@ -25,8 +25,8 @@ func collectResults(boards chan *sudoku.Board) {
 	for b := range boards {
 		count++
 		elapsed := time.Since(start)
-		rate := (elapsed.Nanoseconds()/count) / 1000000
-		fmt.Printf("Solved %v (avg. %d ms)\n", count, rate)
+		rate := (float64(count) / elapsed.Seconds())
+		fmt.Printf("Solved %v (%0.2f per second)\n", count, rate)
 		fmt.Println(b.String())
 	}
 }
