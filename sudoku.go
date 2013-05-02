@@ -24,7 +24,7 @@ func main() {
 	reader := bufio.NewReader(file)
 	b := sudoku.ReadBoard(reader)
 
-	solution := b.Solution()
+	solution := b.Solve()
 	fmt.Println(solution.Original)
 	fmt.Println(solution.Solved)
 	fmt.Println(solution.Elapsed)

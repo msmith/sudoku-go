@@ -73,12 +73,12 @@ func (b *Board) Set(idx int, val int) Board {
 	newBoard := b.Copy()
 	newBoard.Cells[idx].Assign(val)
 	for _, i := range Peers[idx] {
-		newBoard.Eliminate(i, val)
+		newBoard.eliminate(i, val)
 	}
 	return newBoard
 }
 
-func (b *Board) Eliminate(idx int, val int) {
+func (b *Board) eliminate(idx int, val int) {
 	b.Cells[idx].Eliminate(val)
 }
 
@@ -139,26 +139,16 @@ func (b *Board) Solved() bool {
 	return true
 }
 
-// Invalid returns true if at least one cell has 0 possibilities left.
-func (b *Board) Invalid() bool {
-	for _, c := range b.Cells {
-		if c.Invalid() {
-			return true
-		}
-	}
-	return false
-}
-
-func (b *Board) Solution() Solution {
+func (b *Board) Solve() Solution {
 	start := time.Now()
-	b2, _ := b.Solve()
+	b2, _ := b.solve()
 	t := time.Since(start)
 
 	return Solution{b, &b2, t}
 }
 
 // Solve attempts to find a solution to the given Board.
-func (b *Board) Solve() (Board, bool) {
+func (b *Board) solve() (Board, bool) {
 	if b.Solved() {
 		return *b, true
 	}
@@ -179,7 +169,7 @@ func (b *Board) Solve() (Board, bool) {
 			}
 			if count == 1 {
 				b2 := b.Set(idx, v)
-				s, valid := b2.Solve()
+				s, valid := b2.solve()
 				if valid {
 					return s, true
 				} else {
@@ -195,7 +185,7 @@ func (b *Board) Solve() (Board, bool) {
 	for v := 1; v <= DIM2; v++ {
 		if c.Possible(v) {
 			b2 := b.Set(c_idx, v)
-			s, valid := b2.Solve()
+			s, valid := b2.solve()
 			if valid {
 				return s, true
 			}

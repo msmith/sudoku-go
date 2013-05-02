@@ -39,7 +39,7 @@ func main() {
 		}
 		count++
 
-		solution := b.Solution()
+		solution := b.Solve()
 		fmt.Println(solution.String())
 	}
 

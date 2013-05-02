@@ -13,7 +13,7 @@ import (
 
 func solver(unsolved <-chan *sudoku.Board, solved chan<- *sudoku.Solution, done chan bool) {
 	for board := range unsolved {
-		solution := board.Solution()
+		solution := board.Solve()
 		solved <- &solution
 	}
 	done <- true
