@@ -19,7 +19,7 @@ func solver(unsolved <-chan *sudoku.Board, solved chan<- *sudoku.Solution, done 
 	done <- true
 }
 
-func collectResults(solutions chan *sudoku.Solution) {
+func collectResults(solutions <-chan *sudoku.Solution) {
 	var count int64
 	start := time.Now()
 	for s := range solutions {
@@ -31,14 +31,14 @@ func collectResults(solutions chan *sudoku.Solution) {
 	fmt.Printf("Solved %v puzzles in %v (%0.2f per second)\n", count, elapsed, rate)
 }
 
-func waitForSolvers(workers int, done chan bool, toClose chan *sudoku.Solution) {
+func waitForSolvers(workers int, done <-chan bool, toClose chan *sudoku.Solution) {
 	for i := 0; i < workers; i++ {
 		<- done
 	}
 	close(toClose)
 }
 
-func loadBoards(fName string, unsolved chan *sudoku.Board) {
+func loadBoards(fName string, unsolved chan<- *sudoku.Board) {
 	file, err := os.Open(fName)
 	if err != nil {
 		log.Fatal(err)
