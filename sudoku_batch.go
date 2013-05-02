@@ -11,14 +11,12 @@ import (
 )
 
 func main() {
-	var fName string
-
-	if len(os.Args) > 1 {
-		fName = os.Args[1]
-	} else {
-		fName = "sets/sudoku17.gz"
+	if len(os.Args) < 2 {
+		println("Usage: sudoku_batch [file]")
+		os.Exit(1)
 	}
 
+	fName := os.Args[1]
 	file, err := os.Open(fName)
 	if err != nil {
 		log.Fatal(err)
