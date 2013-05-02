@@ -1,14 +1,14 @@
 package sudoku
 
 import (
-	"time"
 	"bytes"
+	"time"
 )
 
 type Solution struct {
 	Original *Board
-	Solved *Board
-	Elapsed time.Duration
+	Solved   *Board
+	Elapsed  time.Duration
 }
 
 func (s *Solution) String() string {
