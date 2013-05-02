@@ -2,30 +2,13 @@
 
 A Sudoku solver in [Go](http://golang.org/).
 
-# Puzzle files
+Uses a combination of constraint propagation and search, with an algorithm
+that's pretty similar to [Peter Norvig's solver](http://norvig.com/sudoku.html).
 
-Two puzzle file formats are supported:
-
-## Single puzzle file
-
-A single puzzle. Each row is on a separate line of 9 chars. Some samples are included in __puzzles/*__
-
-    1..6..2..
-    .6.2.4...
-    ..2...8.3
-    75...8.1.
-    ....1....
-    .4.3...56
-    2.4...1..
-    ...5.3.4.
-    ..3..9..7
-
-## Puzzle set
-
-A set of multiple puzzles. Each puzzle is defined on a separate line of 81 chars. The resulting file is gzipped. Some samples are included in __sets/*__
-
-    000000010400000000020000000000050407008000300001090000300400200050100000000806000
-    000000010400000000020000000000050604008000300001090000300400200050100000000807000
+This was mostly an excuse for me to learn Go and play with its concurrency
+features. Both sequential and parallel solver implementations are included.
+They both use the same algoritm, but the parallel version takes advantage of
+multi-core CPUs.
 
 # Running the Solvers
 
@@ -35,18 +18,12 @@ There are 3 variants of the solvers. Make sure to set your `GOPATH` before runni
 
 ## Single puzzle solver
 
-Solves a single puzzle
-
     $ go run sudoku.go puzzles/p1
 
-## Multiple puzzle solver
-
-Solves multiple puzzles sequentially
+## Sequential puzzle solver
 
 	$ go run sudoku_sequential.go set/hard.gz
 
 ## Parallel puzzle solver
-
-Uses multiple goroutines to solve puzzles in parallel
 
 	$ go run sudoku_parallel.go set/hard.gz
