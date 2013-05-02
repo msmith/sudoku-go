@@ -43,10 +43,10 @@ Solves a single puzzle
 
 Solves multiple puzzles sequentially
 
-	$ go run sudoku_batch.go set/hard.gz
+	$ go run sudoku_sequential.go set/hard.gz
 
 ## Parallel puzzle solver
 
 Uses multiple goroutines to solve puzzles in parallel
 
-	$ go run sudoku_batch.go set/hard.gz
+	$ go run sudoku_parallel.go set/hard.gz
