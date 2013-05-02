@@ -73,14 +73,14 @@ func main() {
 	fName := os.Args[1]
 
 	unsolved := make(chan *sudoku.Board)
-	solved := make(chan *sudoku.Solution)
-	done := make(chan bool)
+	solved   := make(chan *sudoku.Solution)
+	done     := make(chan bool)
+
+	go loadBoards(fName, unsolved)
 
 	for i := 0; i < workers; i++ {
 		go solver(unsolved, solved, done)
 	}
-
-	go loadBoards(fName, unsolved)
 
 	go waitForSolvers(workers, done, solved)
 
