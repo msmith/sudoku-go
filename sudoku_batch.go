@@ -10,13 +10,6 @@ import (
 	"time"
 )
 
-func waitForDone(workers int, done chan bool, toClose chan *sudoku.Board) {
-	for i := 0; i < workers; i++ {
-		<- done
-	}
-	close(toClose)
-}
-
 func main() {
 	var fName string
 
