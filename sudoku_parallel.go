@@ -11,15 +11,10 @@ import (
 	"runtime"
 )
 
-func solver(in <-chan *sudoku.Board, out chan<- *sudoku.Solution, done chan bool) {
-	for b := range in {
-		start := time.Now()
-		b2, _ := b.Solve()
-		t := time.Since(start)
-
-		solution := sudoku.Solution{b, &b2, t}
-
-		out <- &solution
+func solver(unsolved <-chan *sudoku.Board, solved chan<- *sudoku.Solution, done chan bool) {
+	for board := range unsolved {
+		solution := board.Solution()
+		solved <- &solution
 	}
 	done <- true
 }

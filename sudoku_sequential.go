@@ -39,12 +39,7 @@ func main() {
 		}
 		count++
 
-		boardStart := time.Now()
-		b2, _ := b.Solve()
-		t := time.Since(boardStart)
-
-		solution := sudoku.Solution{&b, &b2, t}
-
+		solution := b.Solution()
 		fmt.Println(solution.String())
 	}
 

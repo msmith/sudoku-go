@@ -1,6 +1,7 @@
 package sudoku
 
 import (
+	"time"
 	"bytes"
 	"strconv"
 )
@@ -146,6 +147,14 @@ func (b *Board) Invalid() bool {
 		}
 	}
 	return false
+}
+
+func (b *Board) Solution() Solution {
+	start := time.Now()
+	b2, _ := b.Solve()
+	t := time.Since(start)
+
+	return Solution{b, &b2, t}
 }
 
 // Solve attempts to find a solution to the given Board.
