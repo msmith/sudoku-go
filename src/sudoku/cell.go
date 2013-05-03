@@ -2,19 +2,19 @@ package sudoku
 
 import "strconv"
 
-type Cell struct {
+type cell struct {
 	possibles [DIM2]bool
 	solved    bool
 }
 
-func (c *Cell) Assign(val int) {
+func (c *cell) Assign(val int) {
 	c.solved = true
 	for v, _ := range c.possibles {
 		c.possibles[v] = (v == val-1)
 	}
 }
 
-func (c *Cell) Value() int {
+func (c *cell) Value() int {
 	for v, p := range c.possibles {
 		if p {
 			return (v + 1)
@@ -23,11 +23,11 @@ func (c *Cell) Value() int {
 	return 0
 }
 
-func (c *Cell) Possible(val int) bool {
+func (c *cell) Possible(val int) bool {
 	return c.possibles[val-1]
 }
 
-func (c *Cell) NumPossible() int {
+func (c *cell) NumPossible() int {
 	n := 0
 	for _, p := range c.possibles {
 		if p {
@@ -37,11 +37,11 @@ func (c *Cell) NumPossible() int {
 	return n
 }
 
-func (c *Cell) Eliminate(val int) {
+func (c *cell) Eliminate(val int) {
 	c.possibles[val-1] = false
 }
 
-func (c *Cell) Invalid() bool {
+func (c *cell) Invalid() bool {
 	for _, p := range c.possibles {
 		if p {
 			return false
@@ -50,19 +50,19 @@ func (c *Cell) Invalid() bool {
 	return true
 }
 
-func (c *Cell) Solved() bool {
+func (c *cell) Solved() bool {
 	return c.solved
 }
 
-func NewCell() Cell {
-	cell := new(Cell)
+func NewCell() cell {
+	cell := new(cell)
 	for v := 0; v < DIM2; v++ {
 		cell.possibles[v] = true
 	}
 	return *cell
 }
 
-func (c *Cell) String(whenUnsolved, whenInvalid string) string {
+func (c *cell) String(whenUnsolved, whenInvalid string) string {
 	if c.Invalid() {
 		return "X"
 	} else if c.Solved() {

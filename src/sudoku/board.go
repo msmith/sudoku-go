@@ -12,7 +12,7 @@ const (
 )
 
 type Board struct {
-	Cells [SZ]Cell
+	cells [SZ]cell
 }
 
 // Peers is a lookup table that provides the peer cells for each cell
@@ -46,7 +46,7 @@ func init() {
 }
 
 func (b Board) Set(idx int, val int) Board {
-	b.Cells[idx].Assign(val)
+	b.cells[idx].Assign(val)
 	for _, i := range Peers[idx] {
 		b.eliminate(i, val)
 	}
@@ -54,14 +54,14 @@ func (b Board) Set(idx int, val int) Board {
 }
 
 func (b *Board) eliminate(idx int, val int) {
-	b.Cells[idx].Eliminate(val)
+	b.cells[idx].Eliminate(val)
 }
 
 func NewBoard() Board {
 	// initialize Board
 	board := new(Board)
 	for i := 0; i < SZ; i++ {
-		board.Cells[i] = NewCell()
+		board.cells[i] = NewCell()
 	}
 	return *board
 }
@@ -78,10 +78,10 @@ func posOf(idx int) (row, col, region int) {
 }
 
 // PickUnsolvedCell finds a Cell with the fewest possible values and returns its index.
-func (b *Board) PickUnsolvedCell() int {
+func (b *Board) pickUnsolvedCell() int {
 	idx := -1
 	num_possible := DIM2 + 1
-	for i, c := range b.Cells {
+	for i, c := range b.cells {
 		if !c.Solved() {
 			n := c.NumPossible()
 			if n < num_possible {
@@ -96,7 +96,7 @@ func (b *Board) PickUnsolvedCell() int {
 // Solved returns true if the board is solved.
 func (b *Board) Solved() bool {
 	for i := 0; i < SZ; i++ {
-		c := b.Cells[i]
+		c := b.cells[i]
 		if !c.Solved() {
 			return false
 		}
@@ -124,7 +124,7 @@ func (b *Board) solve() (Board, bool) {
 		for v := 1; v <= DIM2; v++ {
 			count := 0
 			for _, c_idx := range group {
-				c := b.Cells[c_idx]
+				c := b.cells[c_idx]
 				if !c.Solved() && c.Possible(v) {
 					count++
 					if count == 1 {
@@ -145,8 +145,8 @@ func (b *Board) solve() (Board, bool) {
 	}
 
 	// guess
-	c_idx := b.PickUnsolvedCell()
-	c := b.Cells[c_idx]
+	c_idx := b.pickUnsolvedCell()
+	c := b.cells[c_idx]
 	for v := 1; v <= DIM2; v++ {
 		if c.Possible(v) {
 			b2 := b.Set(c_idx, v)
@@ -169,7 +169,7 @@ func (b *Board) String() string {
 				for j := 0; j < DIM; j++ {
 					col := i*DIM + j
 					idx := indexOf(row, col)
-					cell := b.Cells[idx]
+					cell := b.cells[idx]
 					ch := cell.String(".", "x")
 					buffer.WriteString(ch)
 					buffer.WriteString(" ")
@@ -188,7 +188,7 @@ func (b *Board) String() string {
 func (b *Board) ShortString() string {
 	var buffer bytes.Buffer
 
-	for _, cell := range b.Cells {
+	for _, cell := range b.cells {
 		ch := cell.String(".", "x")
 		buffer.WriteString(ch)
 	}
