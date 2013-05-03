@@ -11,12 +11,22 @@ import (
 	"time"
 )
 
-func solver(unsolved <-chan *sudoku.Board, solved chan<- *sudoku.Solution, done chan bool) {
-	for board := range unsolved {
-		solution := board.Solve()
-		solved <- &solution
+func solver(boards <-chan *sudoku.Board, solutions chan<- *sudoku.Solution, done chan bool) {
+	for board := range boards {
+		s := board.Solve()
+		solutions <- &s
 	}
+	// signal that this solver is done
 	done <- true
+}
+
+func waitForSolvers(n int, done <-chan bool, solutions chan *sudoku.Solution) {
+	// wait for n workers to be done
+	for i := 0; i < n; i++ {
+		<-done
+	}
+	// close the solutions channel, which will allow collectResults to return
+	close(solutions)
 }
 
 func collectResults(solutions <-chan *sudoku.Solution) {
@@ -31,13 +41,6 @@ func collectResults(solutions <-chan *sudoku.Solution) {
 	elapsed := time.Since(start)
 	rate := float64(count) / elapsed.Seconds()
 	fmt.Printf("Solved %v puzzles in %v (%0.2f per second)\n", count, elapsed, rate)
-}
-
-func waitForSolvers(workers int, done <-chan bool, toClose chan *sudoku.Solution) {
-	for i := 0; i < workers; i++ {
-		<-done
-	}
-	close(toClose)
 }
 
 func loadBoards(fName string, unsolved chan<- *sudoku.Board) {
