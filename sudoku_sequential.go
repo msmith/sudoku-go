@@ -2,11 +2,11 @@ package main
 
 import (
 	"bufio"
+	"compress/gzip"
 	"fmt"
 	"log"
 	"os"
 	"sudoku"
-	"compress/gzip"
 	"time"
 )
 
@@ -35,7 +35,7 @@ func main() {
 	for {
 		b, err := sudoku.ReadBoardLine(reader)
 		if err != nil {
-			break;
+			break
 		}
 		count++
 

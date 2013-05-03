@@ -1,9 +1,9 @@
 package sudoku
 
 import (
-	"time"
 	"bytes"
 	"strconv"
+	"time"
 )
 
 const (

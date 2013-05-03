@@ -2,13 +2,13 @@ package main
 
 import (
 	"bufio"
+	"compress/gzip"
 	"fmt"
 	"log"
 	"os"
-	"sudoku"
-	"compress/gzip"
-	"time"
 	"runtime"
+	"sudoku"
+	"time"
 )
 
 func solver(unsolved <-chan *sudoku.Board, solved chan<- *sudoku.Solution, done chan bool) {
@@ -35,7 +35,7 @@ func collectResults(solutions <-chan *sudoku.Solution) {
 
 func waitForSolvers(workers int, done <-chan bool, toClose chan *sudoku.Solution) {
 	for i := 0; i < workers; i++ {
-		<- done
+		<-done
 	}
 	close(toClose)
 }
@@ -75,8 +75,8 @@ func main() {
 	fName := os.Args[1]
 
 	unsolved := make(chan *sudoku.Board)
-	solved   := make(chan *sudoku.Solution)
-	done     := make(chan bool)
+	solved := make(chan *sudoku.Solution)
+	done := make(chan bool)
 
 	go loadBoards(fName, unsolved)
 
