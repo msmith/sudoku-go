@@ -20,14 +20,16 @@ func solver(unsolved <-chan *sudoku.Board, solved chan<- *sudoku.Solution, done 
 }
 
 func collectResults(solutions <-chan *sudoku.Solution) {
-	var count int64
+	count := 0
 	start := time.Now()
+
 	for s := range solutions {
 		count++
 		fmt.Println(s)
 	}
+
 	elapsed := time.Since(start)
-	rate := (float64(count) / elapsed.Seconds())
+	rate := float64(count) / elapsed.Seconds()
 	fmt.Printf("Solved %v puzzles in %v (%0.2f per second)\n", count, elapsed, rate)
 }
 
