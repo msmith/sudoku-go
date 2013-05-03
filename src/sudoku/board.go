@@ -16,56 +16,33 @@ type Board struct {
 	Cells []Cell
 }
 
-var Peers [][]int
-var Groups [][]int
+// Peers is a lookup table that provides the peer cells for each cell
+var Peers [][]int = make([][]int, SZ)
 
+// Groups contains cell indexes for each row, column, and region
+var Groups [][]int = make([][]int, DIM2*3)
+
+// initialize Peers & Groups
 func init() {
-	by_row := make([][]int, DIM2)
-	by_col := make([][]int, DIM2)
-	by_region := make([][]int, DIM2)
+	byRow := Groups[0:DIM2]
+	byCol := Groups[DIM2 : 2*DIM2]
+	byReg := Groups[2*DIM2 : 3*DIM2]
 
-	for i := 0; i < DIM2; i++ {
-		by_row[i] = make([]int, 0, DIM2)
-		by_col[i] = make([]int, 0, DIM2)
-		by_region[i] = make([]int, 0, DIM2)
-	}
-
-	// init Peers
-	Peers = make([][]int, SZ)
 	for i := 0; i < SZ; i++ {
-		row_i := i / DIM2
-		col_i := i % DIM2
-		region_i := (row_i/DIM)*DIM + (col_i / DIM)
+		row, col, reg := posOf(i)
 
-		by_row[row_i] = append(by_row[row_i], i)
-		by_col[col_i] = append(by_col[col_i], i)
-		by_region[region_i] = append(by_region[region_i], i)
-
-		ps := make([]int, 0, 20)
+		byRow[row] = append(byRow[row], i)
+		byCol[col] = append(byCol[col], i)
+		byReg[reg] = append(byReg[reg], i)
 
 		for j := 0; j < SZ; j++ {
-			row := j / DIM2
-			col := j % DIM2
-			region := (row/DIM)*DIM + (col / DIM)
-
-			if (j != i) && (row == row_i || col == col_i || region == region_i) {
-				ps = append(ps, j)
+			if j != i {
+				row_j, col_j, reg_j := posOf(j)
+				if row_j == row || col_j == col || reg_j == reg {
+					Peers[i] = append(Peers[i], j)
+				}
 			}
 		}
-
-		Peers[i] = ps
-	}
-
-	// init Groups
-	Groups = make([][]int, 0, DIM2*3)
-	for _, cells := range by_row {
-		Groups = append(Groups, cells)
-	}
-	for _, cells := range by_col {
-		Groups = append(Groups, cells)
-	}
-	for _, cells := range by_region {
-		Groups = append(Groups, cells)
 	}
 }
 
@@ -103,13 +80,11 @@ func indexOf(row, col int) int {
 	return row*DIM2 + col
 }
 
-func posOf(idx int) (row, col int) {
-	return (idx / DIM2), (idx % DIM2)
-}
-
-func (b *Board) CellAt(row, col int) *Cell {
-	idx := indexOf(row, col)
-	return &b.Cells[idx]
+func posOf(idx int) (row, col, region int) {
+	row = idx / DIM2
+	col = idx % DIM2
+	region = (row/DIM)*DIM + (col / DIM)
+	return row, col, region
 }
 
 // PickUnsolvedCell finds a Cell with the fewest possible values and returns its index.
