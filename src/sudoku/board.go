@@ -12,7 +12,7 @@ const (
 )
 
 type Board struct {
-	Cells []Cell
+	Cells [SZ]Cell
 }
 
 // Peers is a lookup table that provides the peer cells for each cell
@@ -45,13 +45,12 @@ func init() {
 	}
 }
 
-func (b *Board) Set(idx int, val int) Board {
-	newBoard := b.Copy()
-	newBoard.Cells[idx].Assign(val)
+func (b Board) Set(idx int, val int) Board {
+	b.Cells[idx].Assign(val)
 	for _, i := range Peers[idx] {
-		newBoard.eliminate(i, val)
+		b.eliminate(i, val)
 	}
-	return newBoard
+	return b
 }
 
 func (b *Board) eliminate(idx int, val int) {
@@ -60,19 +59,11 @@ func (b *Board) eliminate(idx int, val int) {
 
 func NewBoard() Board {
 	// initialize Board
-	board := &Board{make([]Cell, SZ)}
+	board := new(Board)
 	for i := 0; i < SZ; i++ {
 		board.Cells[i] = NewCell()
 	}
 	return *board
-}
-
-func (b *Board) Copy() Board {
-	newBoard := &Board{make([]Cell, SZ)}
-	for i := 0; i < SZ; i++ {
-		newBoard.Cells[i] = b.Cells[i].Copy()
-	}
-	return *newBoard
 }
 
 func indexOf(row, col int) int {

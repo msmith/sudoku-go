@@ -3,7 +3,7 @@ package sudoku
 import "strconv"
 
 type Cell struct {
-	possibles []bool
+	possibles [DIM2]bool
 	solved    bool
 }
 
@@ -50,19 +50,12 @@ func (c *Cell) Invalid() bool {
 	return true
 }
 
-func (c *Cell) Copy() Cell {
-	d := NewCell()
-	d.solved = c.solved
-	copy(d.possibles, c.possibles)
-	return d
-}
-
 func (c *Cell) Solved() bool {
 	return c.solved
 }
 
 func NewCell() Cell {
-	cell := &Cell{make([]bool, DIM2), false}
+	cell := new(Cell)
 	for v := 0; v < DIM2; v++ {
 		cell.possibles[v] = true
 	}
