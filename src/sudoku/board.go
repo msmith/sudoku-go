@@ -2,7 +2,6 @@ package sudoku
 
 import (
 	"bytes"
-	"strconv"
 	"time"
 )
 
@@ -92,7 +91,7 @@ func (b *Board) PickUnsolvedCell() int {
 	idx := -1
 	num_possible := DIM2 + 1
 	for i, c := range b.Cells {
-		if !c.Solved {
+		if !c.Solved() {
 			n := c.NumPossible()
 			if n < num_possible {
 				idx = i
@@ -107,7 +106,7 @@ func (b *Board) PickUnsolvedCell() int {
 func (b *Board) Solved() bool {
 	for i := 0; i < SZ; i++ {
 		c := b.Cells[i]
-		if !c.Solved {
+		if !c.Solved() {
 			return false
 		}
 	}
@@ -135,7 +134,7 @@ func (b *Board) solve() (Board, bool) {
 			count := 0
 			for _, c_idx := range group {
 				c := b.Cells[c_idx]
-				if !c.Solved && c.Possible(v) {
+				if !c.Solved() && c.Possible(v) {
 					count++
 					if count == 1 {
 						idx = c_idx
@@ -180,14 +179,7 @@ func (b *Board) String() string {
 					col := i*DIM + j
 					idx := indexOf(row, col)
 					cell := b.Cells[idx]
-					var ch string
-					if cell.Invalid() {
-						ch = "X"
-					} else if cell.Solved {
-						ch = strconv.Itoa(cell.Value())
-					} else {
-						ch = "."
-					}
+					ch := cell.String(".", "x")
 					buffer.WriteString(ch)
 					buffer.WriteString(" ")
 				}
@@ -206,42 +198,8 @@ func (b *Board) ShortString() string {
 	var buffer bytes.Buffer
 
 	for _, cell := range b.Cells {
-		var ch string
-		if cell.Invalid() {
-			ch = "X"
-		} else if cell.Solved {
-			ch = strconv.Itoa(cell.Value())
-		} else {
-			ch = "."
-		}
+		ch := cell.String(".", "x")
 		buffer.WriteString(ch)
 	}
-	return buffer.String()
-}
-
-func (b *Board) DebugString() string {
-	var buffer bytes.Buffer
-	for row := 0; row < DIM2; row++ {
-		for col := 0; col < DIM2; col++ {
-			idx := indexOf(row, col)
-			cell := b.Cells[idx]
-			var ch string
-			for v := 1; v <= DIM2; v++ {
-				if cell.Possible(v) {
-					ch = strconv.Itoa(v)
-				} else {
-					if cell.Solved {
-						ch = "-"
-					} else {
-						ch = "."
-					}
-				}
-				buffer.WriteString(ch)
-			}
-			buffer.WriteString(" ")
-		}
-		buffer.WriteString("\n")
-	}
-
 	return buffer.String()
 }
