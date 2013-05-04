@@ -95,8 +95,7 @@ func (b *Board) pickUnsolvedCell() int {
 
 // Solved returns true if the board is solved.
 func (b *Board) Solved() bool {
-	for i := 0; i < SZ; i++ {
-		c := b.cells[i]
+	for _, c := range b.cells {
 		if !c.Solved() {
 			return false
 		}
