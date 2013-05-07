@@ -45,6 +45,15 @@ func init() {
 	}
 }
 
+func (b *Board) Valid() bool {
+	for _, c := range b.cells {
+		if c.Invalid() {
+			return false
+		}
+	}
+	return true
+}
+
 func (b Board) Set(idx int, val int) Board {
 	b.cells[idx].Assign(val)
 	for _, i := range Peers[idx] {
