@@ -113,10 +113,6 @@ func (b *Board) Solve() Solution {
 
 // Solve attempts to find a solution to the given Board.
 func (b *Board) solve() (Board, bool) {
-	if b.Solved() {
-		return *b, true
-	}
-
 	// check groups of peers to look for a value that only appears once
 	for _, group := range Groups {
 		idx := -1
@@ -145,6 +141,11 @@ func (b *Board) solve() (Board, bool) {
 
 	// guess
 	c_idx := b.pickUnsolvedCell()
+	if c_idx == -1 {
+		// must be solved!
+		return *b, true
+	}
+
 	c := b.cells[c_idx]
 	for v := 1; v <= DIM2; v++ {
 		if c.Possible(v) {
