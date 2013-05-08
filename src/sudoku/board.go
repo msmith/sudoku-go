@@ -151,12 +151,7 @@ func (b *Board) solve() (Board, bool) {
 			if count == 1 {
 				// v only appeared once, so we can solve it
 				b2 := b.Set(idx, v)
-				s, valid := b2.solve()
-				if valid {
-					return s, true
-				} else {
-					return s, false
-				}
+				b = &b2
 			}
 		}
 	}
