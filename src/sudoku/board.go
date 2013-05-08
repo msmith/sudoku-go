@@ -134,19 +134,22 @@ func (b *Board) Solve() Solution {
 func (b *Board) solve() (Board, bool) {
 	// check groups of peers to look for a value that only appears once
 	for _, group := range Groups {
-		idx := -1
 		for v := 1; v <= DIM2; v++ {
-			count := 0
+			idx := -1  // index of the cell which can be solved
+			count := 0 // number of times that v is seen within this group
 			for _, c_idx := range group {
 				c := b.cells[c_idx]
 				if !c.Solved() && c.Possible(v) {
 					count++
-					if count == 1 {
-						idx = c_idx
+					if (count > 1) {
+						// no need to continue looking. v can't be solved in this group
+						break
 					}
+					idx = c_idx
 				}
 			}
 			if count == 1 {
+				// v only appeared once, so we can solve it
 				b2 := b.Set(idx, v)
 				s, valid := b2.solve()
 				if valid {
@@ -158,23 +161,25 @@ func (b *Board) solve() (Board, bool) {
 		}
 	}
 
-	// guess
-	c_idx := b.pickUnsolvedCell()
-	if c_idx == -1 {
-		// must be solved!
+	// we have to make a guess
+	idx := b.pickUnsolvedCell()
+	if idx == -1 {
+		// we must be done!
 		return *b, true
 	}
 
-	c := b.cells[c_idx]
+	// try each possible value until we find a solution
+	c := b.cells[idx]
 	for v := 1; v <= DIM2; v++ {
 		if c.Possible(v) {
-			b2 := b.Set(c_idx, v)
+			b2 := b.Set(idx, v)
 			s, valid := b2.solve()
 			if valid {
 				return s, true
 			}
 		}
 	}
+
 	return *b, false
 }
 
