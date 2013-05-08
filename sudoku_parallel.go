@@ -29,15 +29,21 @@ func waitForSolvers(workerCount int, done <-chan bool, solutions chan *sudoku.So
 func collectResults(solutions <-chan *sudoku.Solution) {
 	count := 0
 	start := time.Now()
+	var hardest sudoku.Solution
 
 	for s := range solutions {
+		fmt.Println(s.String())
+
 		count++
-		fmt.Println(s)
+		if s.Elapsed > hardest.Elapsed {
+			hardest = *s
+		}
 	}
 
 	elapsed := time.Since(start)
 	rate := float64(count) / elapsed.Seconds()
 	fmt.Printf("Solved %v puzzles in %v (%0.2f per second)\n", count, elapsed, rate)
+	fmt.Printf("Hardest puzzle took %v\n", hardest.Elapsed)
 }
 
 func loadBoards(fName string, unsolved chan<- *sudoku.Board) {

@@ -16,15 +16,20 @@ func main() {
 	fName := os.Args[1]
 	count := 0
 	start := time.Now()
+	var hardest sudoku.Solution
 
 	sudoku.ReadBoardSet(fName, func(b sudoku.Board) {
-		count++
+		s := b.Solve()
+		fmt.Println(s.String())
 
-		solution := b.Solve()
-		fmt.Println(solution.String())
+		count++
+		if s.Elapsed > hardest.Elapsed {
+			hardest = s
+		}
 	})
 
 	elapsed := time.Since(start)
 	rate := float64(count) / elapsed.Seconds()
 	fmt.Printf("Solved %v puzzles in %v (%0.2f per second)\n", count, elapsed, rate)
+	fmt.Printf("Hardest puzzle took %v\n", hardest.Elapsed)
 }
