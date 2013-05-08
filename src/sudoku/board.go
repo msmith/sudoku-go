@@ -141,7 +141,7 @@ func (b *Board) solve() (Board, bool) {
 				c := b.cells[c_idx]
 				if !c.Solved() && c.Possible(v) {
 					count++
-					if (count > 1) {
+					if count > 1 {
 						// no need to continue looking. v can't be solved in this group
 						break
 					}
