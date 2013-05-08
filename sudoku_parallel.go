@@ -17,9 +17,9 @@ func solver(boards <-chan *sudoku.Board, solutions chan<- *sudoku.Solution, done
 	done <- true
 }
 
-func waitForSolvers(n int, done <-chan bool, solutions chan *sudoku.Solution) {
-	// wait for n workers to be done
-	for i := 0; i < n; i++ {
+func waitForSolvers(workerCount int, done <-chan bool, solutions chan *sudoku.Solution) {
+	// wait for workers to be done
+	for i := 0; i < workerCount; i++ {
 		<-done
 	}
 	// close the solutions channel, which will allow collectResults to return
@@ -53,22 +53,22 @@ func main() {
 		os.Exit(1)
 	}
 
-	workers := runtime.NumCPU()
-	runtime.GOMAXPROCS(workers)
+	workerCount := runtime.NumCPU()
+	runtime.GOMAXPROCS(workerCount)
 
 	fName := os.Args[1]
 
-	unsolved := make(chan *sudoku.Board)
-	solved := make(chan *sudoku.Solution)
+	boards := make(chan *sudoku.Board)
+	solutions := make(chan *sudoku.Solution)
 	done := make(chan bool)
 
-	go loadBoards(fName, unsolved)
+	go loadBoards(fName, boards)
 
-	for i := 0; i < workers; i++ {
-		go solver(unsolved, solved, done)
+	for i := 0; i < workerCount; i++ {
+		go solver(boards, solutions, done)
 	}
 
-	go waitForSolvers(workers, done, solved)
+	go waitForSolvers(workerCount, done, solutions)
 
-	collectResults(solved)
+	collectResults(solutions)
 }
