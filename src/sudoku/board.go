@@ -15,17 +15,34 @@ type Board struct {
 	cells [SZ]cell
 }
 
-// Peers is a lookup table that provides the peer cells for each cell
-var Peers [][]int = make([][]int, SZ)
+// Peers is a lookup table that provides the peer cells of each cell
+var Peers [][]int = createPeers()
 
-// Groups contains cell indexes for each row, column, and region
-var Groups [][]int = make([][]int, DIM2*3)
+// Groups contains the cell indexes of each group (row, column, and region)
+var Groups [][]int = createGroups()
 
-// initialize Peers & Groups
-func init() {
-	byRow := Groups[0:DIM2]
-	byCol := Groups[DIM2 : 2*DIM2]
-	byReg := Groups[2*DIM2 : 3*DIM2]
+func createPeers() [][]int {
+	peers := make([][]int, SZ)
+	for i := 0; i < SZ; i++ {
+		row, col, reg := posOf(i)
+
+		for j := 0; j < SZ; j++ {
+			if j != i {
+				row_j, col_j, reg_j := posOf(j)
+				if row_j == row || col_j == col || reg_j == reg {
+					peers[i] = append(peers[i], j)
+				}
+			}
+		}
+	}
+	return peers
+}
+
+func createGroups() [][]int {
+	groups := make([][]int, DIM2*3)
+	byRow := groups[0:DIM2]
+	byCol := groups[DIM2 : 2*DIM2]
+	byReg := groups[2*DIM2 : 3*DIM2]
 
 	for i := 0; i < SZ; i++ {
 		row, col, reg := posOf(i)
@@ -33,16 +50,9 @@ func init() {
 		byRow[row] = append(byRow[row], i)
 		byCol[col] = append(byCol[col], i)
 		byReg[reg] = append(byReg[reg], i)
-
-		for j := 0; j < SZ; j++ {
-			if j != i {
-				row_j, col_j, reg_j := posOf(j)
-				if row_j == row || col_j == col || reg_j == reg {
-					Peers[i] = append(Peers[i], j)
-				}
-			}
-		}
 	}
+
+	return groups
 }
 
 func (b *Board) Valid() bool {
