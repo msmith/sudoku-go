@@ -1,10 +1,7 @@
 package main
 
 import (
-	"bufio"
-	"compress/gzip"
 	"fmt"
-	"log"
 	"os"
 	"runtime"
 	"sudoku"
@@ -44,25 +41,9 @@ func collectResults(solutions <-chan *sudoku.Solution) {
 }
 
 func loadBoards(fName string, unsolved chan<- *sudoku.Board) {
-	file, err := os.Open(fName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	gz_reader, err := gzip.NewReader(file)
-	if err != nil {
-		log.Fatal(err)
-	}
-	reader := bufio.NewReader(gz_reader)
-
-	for {
-		b, err := sudoku.ReadBoardLine(reader)
-		if err != nil {
-			break
-		}
+	sudoku.ReadBoardSet(fName, func(b sudoku.Board) {
 		unsolved <- &b
-	}
+	})
 	close(unsolved)
 }
 

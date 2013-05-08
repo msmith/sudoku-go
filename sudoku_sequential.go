@@ -1,10 +1,7 @@
 package main
 
 import (
-	"bufio"
-	"compress/gzip"
 	"fmt"
-	"log"
 	"os"
 	"sudoku"
 	"time"
@@ -17,31 +14,15 @@ func main() {
 	}
 
 	fName := os.Args[1]
-	file, err := os.Open(fName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	gz_reader, err := gzip.NewReader(file)
-	if err != nil {
-		log.Fatal(err)
-	}
-	reader := bufio.NewReader(gz_reader)
-
 	count := 0
 	start := time.Now()
 
-	for {
-		b, err := sudoku.ReadBoardLine(reader)
-		if err != nil {
-			break
-		}
+	sudoku.ReadBoardSet(fName, func(b sudoku.Board) {
 		count++
 
 		solution := b.Solve()
 		fmt.Println(solution.String())
-	}
+	})
 
 	elapsed := time.Since(start)
 	rate := float64(count) / elapsed.Seconds()

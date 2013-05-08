@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"sudoku"
 )
@@ -15,14 +13,7 @@ func main() {
 	}
 
 	fName := os.Args[1]
-	file, err := os.Open(fName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	reader := bufio.NewReader(file)
-	b := sudoku.ReadBoard(reader)
+	b := sudoku.ReadBoardFile(fName)
 
 	solution := b.Solve()
 	fmt.Println(solution.Original)

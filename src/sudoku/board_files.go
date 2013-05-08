@@ -2,12 +2,15 @@ package sudoku
 
 import (
 	"bufio"
+	"compress/gzip"
 	"errors"
+	"log"
+	"os"
 	"strconv"
 )
 
 // read a board where each row is on a separate line
-func ReadBoard(reader *bufio.Reader) Board {
+func readBoard(reader *bufio.Reader) Board {
 	board := NewBoard()
 
 	var row int
@@ -31,8 +34,19 @@ func ReadBoard(reader *bufio.Reader) Board {
 	return board
 }
 
+func ReadBoardFile(fName string) Board {
+	file, err := os.Open(fName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	reader := bufio.NewReader(file)
+	return readBoard(reader)
+}
+
 // read a board where the entire board is on one line
-func ReadBoardLine(reader *bufio.Reader) (Board, error) {
+func readBoardLine(reader *bufio.Reader) (Board, error) {
 	str, _ := reader.ReadString('\n')
 	board := NewBoard()
 	if str == "" {
@@ -47,4 +61,28 @@ func ReadBoardLine(reader *bufio.Reader) (Board, error) {
 	}
 
 	return board, nil
+}
+
+type gotboard func(Board)
+
+func ReadBoardSet(fName string, f gotboard) {
+	file, err := os.Open(fName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	gz_reader, err := gzip.NewReader(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+	reader := bufio.NewReader(gz_reader)
+
+	for {
+		b, err := readBoardLine(reader)
+		if err != nil {
+			break
+		}
+		f(b)
+	}
 }
