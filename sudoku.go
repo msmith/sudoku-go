@@ -13,7 +13,10 @@ func main() {
 	}
 
 	fName := os.Args[1]
-	b := sudoku.ReadBoardFile(fName)
+	b, err := sudoku.ReadBoardFile(fName)
+	if err != nil {
+		panic(err)
+	}
 
 	solution := b.Solve()
 	fmt.Println(solution.Original)

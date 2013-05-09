@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"runtime"
 	"sudoku"
@@ -47,9 +48,12 @@ func collectResults(solutions <-chan *sudoku.Solution) {
 }
 
 func loadBoards(fName string, unsolved chan<- *sudoku.Board) {
-	sudoku.ReadBoardSet(fName, func(b sudoku.Board) {
+	err := sudoku.ReadBoardSet(fName, func(b sudoku.Board) {
 		unsolved <- &b
 	})
+	if err != nil {
+		log.Fatal(err)
+	}
 	close(unsolved)
 }
 

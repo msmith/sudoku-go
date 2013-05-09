@@ -125,9 +125,9 @@ func (b *Board) Solved() bool {
 func (b *Board) Solve() Solution {
 	start := time.Now()
 	b2, _ := b.solve()
-	t := time.Since(start)
+	elapsed := time.Since(start)
 
-	return Solution{b, &b2, t}
+	return Solution{b, &b2, elapsed}
 }
 
 // Solve attempts to find a solution to the given Board.
@@ -168,9 +168,9 @@ func (b *Board) solve() (Board, bool) {
 	for v := 1; v <= DIM2; v++ {
 		if c.Possible(v) {
 			b2 := b.Set(idx, v)
-			s, valid := b2.solve()
+			b3, valid := b2.solve()
 			if valid {
-				return s, true
+				return b3, true
 			}
 		}
 	}

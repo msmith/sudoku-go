@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"sudoku"
 	"time"
@@ -18,7 +19,7 @@ func main() {
 	start := time.Now()
 	var hardest sudoku.Solution
 
-	sudoku.ReadBoardSet(fName, func(b sudoku.Board) {
+	err := sudoku.ReadBoardSet(fName, func(b sudoku.Board) {
 		s := b.Solve()
 		fmt.Println(s.String())
 
@@ -27,6 +28,9 @@ func main() {
 			hardest = s
 		}
 	})
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	elapsed := time.Since(start)
 	rate := float64(count) / elapsed.Seconds()
