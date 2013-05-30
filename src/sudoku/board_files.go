@@ -7,24 +7,30 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"regexp"
 	"strconv"
-	"strings"
 )
 
-// read a single puzzle file
-func ReadBoardFile(fName string) (Board, error) {
-	bytes, err := ioutil.ReadFile(fName)
+var whitespace *regexp.Regexp = regexp.MustCompile("\\s+")
+
+// A file containing a single board
+type BoardFile string
+
+func (f BoardFile) Board() (*Board, error) {
+	bytes, err := ioutil.ReadFile(string(f))
 	if err != nil {
-		return NewBoard(), err
+		return nil, err
 	}
 	return boardFromString(string(bytes))
 }
 
-type gotboard func(Board)
+// A file containing multiple boards
+type BoardSet string
 
-// read a puzzle set file
-func ReadBoardSet(fName string, f gotboard) error {
-	file, err := os.Open(fName)
+type gotboard func(*Board)
+
+func (f BoardSet) EachBoard(callback gotboard) error {
+	file, err := os.Open(string(f))
 	if err != nil {
 		return err
 	}
@@ -37,28 +43,27 @@ func ReadBoardSet(fName string, f gotboard) error {
 	reader := bufio.NewReader(gz_reader)
 
 	for {
-		b, err := readBoardLine(reader)
+		b, err := ReadBoardLine(reader)
 		if err == io.EOF {
 			return nil
 		}
 		if err != nil {
 			return err
 		}
-		f(b)
+		callback(b)
 	}
 
 	return nil
 }
 
-func boardFromString(str string) (Board, error) {
-	// remove spaces & newlines
-	str = strings.Replace(str, " ", "", -1)
-	str = strings.Replace(str, "\n", "", -1)
+func boardFromString(str string) (*Board, error) {
+	// remove whitespace
+	str = whitespace.ReplaceAllString(str, "")
 
-	board := NewBoard()
 	if len(str) != SZ {
-		return board, errors.New("line was incorrect length")
+		return nil, errors.New("line was incorrect length")
 	}
+	board := NewBoard()
 	for i := 0; i < len(str); i++ {
 		ch := str[i : i+1]
 		val, _ := strconv.Atoi(ch)
@@ -67,15 +72,15 @@ func boardFromString(str string) (Board, error) {
 		}
 	}
 	if !board.Valid() {
-		return board, errors.New("board is invalid")
+		return nil, errors.New("board is invalid")
 	}
-	return board, nil
+	return &board, nil
 }
 
-func readBoardLine(reader *bufio.Reader) (Board, error) {
+func ReadBoardLine(reader *bufio.Reader) (*Board, error) {
 	str, err := reader.ReadString('\n')
 	if err != nil {
-		return NewBoard(), err
+		return nil, err
 	}
 
 	return boardFromString(str)

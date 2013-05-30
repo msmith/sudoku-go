@@ -48,8 +48,9 @@ func collectResults(solutions <-chan *sudoku.Solution) {
 }
 
 func loadBoards(fName string, unsolved chan<- *sudoku.Board) {
-	err := sudoku.ReadBoardSet(fName, func(b sudoku.Board) {
-		unsolved <- &b
+	boards := sudoku.BoardSet(fName)
+	err := boards.EachBoard(func(b *sudoku.Board) {
+		unsolved <- b
 	})
 	if err != nil {
 		log.Fatal(err)

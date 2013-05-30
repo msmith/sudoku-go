@@ -75,7 +75,7 @@ func solve(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	s, ok := cacheGet(b)
+	s, ok := cacheGet(*b)
 	if ok {
 		log.Println("Cache hit!")
 	} else {

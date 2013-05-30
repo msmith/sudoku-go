@@ -12,8 +12,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	fName := os.Args[1]
-	b, err := sudoku.ReadBoardFile(fName)
+	file := sudoku.BoardFile(os.Args[1])
+	b, err := file.Board()
 	if err != nil {
 		panic(err)
 	}
