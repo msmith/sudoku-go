@@ -22,8 +22,8 @@ There are 3 variants of the solvers. Make sure to set your `GOPATH` before runni
 
 ## Sequential puzzle solver
 
-	$ go run sudoku_sequential.go set/hard.gz
+	$ go run sudoku_sequential.go sets/hard.gz
 
 ## Parallel puzzle solver
 
-	$ go run sudoku_parallel.go set/hard.gz
+	$ go run sudoku_parallel.go sets/hard.gz
