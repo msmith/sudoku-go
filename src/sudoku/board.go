@@ -13,13 +13,14 @@ const (
 
 type Board [SZ]cell
 
-// Peers is a lookup table that provides the peer cells of each cell
-var Peers [][]int = createPeers()
+// Peers is a lookup table that provides the peer cells of each cell. A
+// peer is a cell that lives in the same row, column, or region as this one.
+var Peers [][]int = initPeers()
 
 // Groups contains the cell indexes of each group (row, column, and region)
-var Groups [][]int = createGroups()
+var Groups [][]int = initGroups()
 
-func createPeers() [][]int {
+func initPeers() [][]int {
 	peers := make([][]int, SZ)
 	for i := 0; i < SZ; i++ {
 		row, col, reg := posOf(i)
@@ -36,7 +37,7 @@ func createPeers() [][]int {
 	return peers
 }
 
-func createGroups() [][]int {
+func initGroups() [][]int {
 	groups := make([][]int, DIM2*3)
 	byRow := groups[0:DIM2]
 	byCol := groups[DIM2 : 2*DIM2]
@@ -53,6 +54,18 @@ func createGroups() [][]int {
 	return groups
 }
 
+// NewBoard returns a new empty Board.
+func NewBoard() Board {
+	// initialize Board
+	board := new(Board)
+	for i := 0; i < SZ; i++ {
+		board[i] = NewCell()
+	}
+	return *board
+}
+
+// Valid checks that the value in each cell is legal, and does not conflict
+// with the value in other cells.
 func (b *Board) Valid() bool {
 	for _, c := range b {
 		if c.Invalid() {
@@ -62,21 +75,13 @@ func (b *Board) Valid() bool {
 	return true
 }
 
+// Set assigns a value (1-9) to the cell at the given index.
 func (b Board) Set(idx int, val int) Board {
 	b[idx].Assign(val)
 	for _, peerIdx := range Peers[idx] {
 		b[peerIdx].Eliminate(val)
 	}
 	return b
-}
-
-func NewBoard() Board {
-	// initialize Board
-	board := new(Board)
-	for i := 0; i < SZ; i++ {
-		board[i] = NewCell()
-	}
-	return *board
 }
 
 func indexOf(row, col int) int {
@@ -116,6 +121,8 @@ func (b *Board) Solved() bool {
 	return true
 }
 
+// Solve will return a solution to this Board. Every valid Board has at least
+// one solution. Only the first discovered solution will be returned.
 func (b *Board) Solve() Solution {
 	start := time.Now()
 	b2, _ := b.solve()
@@ -172,6 +179,21 @@ func (b *Board) solve() (Board, bool) {
 	return *b, false
 }
 
+/*
+String returns a nicely formatted representation of this Board. For example:
+
+   1 . .   6 . .   2 . .
+   . 6 .   2 . 4   . . .
+   . . 2   . . .   8 . 3
+
+   7 5 .   . . 8   . 1 .
+   . . .   . 1 .   . . .
+   . 4 .   3 . .   . 5 6
+
+   2 . 4   . . .   1 . .
+   . . .   5 . 3   . 4 .
+   . . 3   . . 9   . . 7
+*/
 func (b *Board) String() string {
 	var buffer bytes.Buffer
 
@@ -198,6 +220,11 @@ func (b *Board) String() string {
 	return buffer.String()
 }
 
+/*
+ShortString returns a one-line representation of this Board. For example:
+
+   1..6..2...6.2.4.....2...8.375...8.1.....1.....4.3...562.4...1.....5.3.4...3..9..7
+*/
 func (b *Board) ShortString() string {
 	var buffer bytes.Buffer
 

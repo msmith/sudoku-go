@@ -7,6 +7,14 @@ type cell struct {
 	solved    bool
 }
 
+func NewCell() cell {
+	cell := new(cell)
+	for v := 0; v < DIM2; v++ {
+		cell.possibles[v] = true
+	}
+	return *cell
+}
+
 func (c *cell) Assign(val int) {
 	c.solved = true
 	for v, _ := range c.possibles {
@@ -52,14 +60,6 @@ func (c *cell) Invalid() bool {
 
 func (c *cell) Solved() bool {
 	return c.solved
-}
-
-func NewCell() cell {
-	cell := new(cell)
-	for v := 0; v < DIM2; v++ {
-		cell.possibles[v] = true
-	}
-	return *cell
 }
 
 func (c *cell) String(whenUnsolved, whenInvalid string) string {

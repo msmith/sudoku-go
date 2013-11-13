@@ -27,9 +27,9 @@ func (f BoardFile) Board() (*Board, error) {
 // A file containing multiple boards
 type BoardSet string
 
-type gotboard func(*Board)
+type gotBoard func(*Board)
 
-func (f BoardSet) EachBoard(callback gotboard) error {
+func (f BoardSet) EachBoard(callback gotBoard) error {
 	file, err := os.Open(string(f))
 	if err != nil {
 		return err
