@@ -48,7 +48,7 @@ func collectResults(solutions <-chan *sudoku.Solution) {
 }
 
 func loadBoards(fName string, unsolved chan<- *sudoku.Board) {
-	boards := sudoku.BoardSet(fName)
+	boards := sudoku.MultipleBoardFile(fName)
 	err := boards.EachBoard(func(b *sudoku.Board) {
 		unsolved <- b
 	})

@@ -12,7 +12,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	file := sudoku.BoardFile(os.Args[1])
+	file := sudoku.SingleBoardFile(os.Args[1])
 	b, err := file.Board()
 	if err != nil {
 		panic(err)

@@ -19,7 +19,7 @@ func main() {
 	start := time.Now()
 	var hardest sudoku.Solution
 
-	boards := sudoku.BoardSet(fName)
+	boards := sudoku.MultipleBoardFile(fName)
 	err := boards.EachBoard(func(b *sudoku.Board) {
 		s := b.Solve()
 		fmt.Println(s.String())

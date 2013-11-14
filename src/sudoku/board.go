@@ -2,6 +2,8 @@ package sudoku
 
 import (
 	"bytes"
+	"errors"
+	"strconv"
 	"time"
 )
 
@@ -63,6 +65,29 @@ func NewBoard() Board {
 	}
 	return *board
 }
+
+// ParseBoardString parses the given string and returns a new Board.
+func ParseBoardString(str string) (*Board, error) {
+	// remove whitespace
+	str = whitespace.ReplaceAllString(str, "")
+
+	if len(str) != SZ {
+		return nil, errors.New("line was incorrect length")
+	}
+	board := NewBoard()
+	for i := 0; i < len(str); i++ {
+		ch := str[i : i+1]
+		val, _ := strconv.Atoi(ch)
+		if val > 0 {
+			board = board.Set(i, val)
+		}
+	}
+	if !board.Valid() {
+		return nil, errors.New("board is invalid")
+	}
+	return &board, nil
+}
+
 
 // Valid checks that the value in each cell is legal, and does not conflict
 // with the value in other cells.
