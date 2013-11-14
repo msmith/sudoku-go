@@ -1,0 +1,66 @@
+.page {
+	width: 480px;
+	margin: 0 auto;
+	height: 100%;
+}
+
+input[type="text"] {
+	width: 480px;
+}
+
+.board {
+	float: left;
+	width: 200px;
+	margin-right: 80px;
+	text-align: center;
+	height: 100%;
+}
+
+.board:last-child {
+	margin-right: 0;
+}
+
+.cells {
+	font-family: monospace;
+}
+
+.solving-true .cells {
+	color: #bbb;
+}
+
+.solving-true .cells td {
+	border-color: #bbb;
+}
+
+table td {
+	width: 20px;
+	height: 20px;
+}
+
+.row-2 td, .row-5 td, .row-8 td {
+	border-bottom: 1px solid black;
+}
+
+.row-0 td {
+	border-top: 1px solid black;
+}
+
+td.col-2, td.col-5, td.col-8 {
+	border-right: 1px solid black;
+}
+
+td.col-0 {
+	border-left: 1px solid black;
+}
+
+.error {
+	color: red;
+}
+
+table.cells {
+	border-spacing: 0;
+}
+
+td div {
+	border: 1px solid #eee;
+}

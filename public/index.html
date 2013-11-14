@@ -1,0 +1,49 @@
+<!doctype html>
+<html ng-app>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+    <script src="sudoku.js"></script>
+    <link rel="stylesheet" href="sudoku.css">
+  </head>
+  <body>
+    <div class="page" ng-controller="SudokuCtrl">
+
+      <h2>Sudoku</h2>
+
+      <form ng-submit="solveBoard()">
+        <input type="text" ng-model="inputString"
+               placeholder="Enter a Sudoku board">
+
+        <input class="btn-primary" type="submit" value="Solve">
+      </form>
+
+      <div class="boards">
+        <div class="board">
+          <h3>Unsolved</h3>
+          <table class="cells">
+            <tr ng-repeat="row in unsolvedBoard() track by $index" class="row-{{$index}}">
+              <td ng-repeat="cell in row track by $index" class="col-{{$index}}">
+                {{cell == 0 ? "" : cell}}
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="board solving-{{solving}}">
+          <h3>Solved</h3>
+          <div class="error">
+            {{errorMessage}}
+          </div>
+          <table class="cells">
+            <tr ng-repeat="row in solved track by $index" class="row-{{$index}}">
+              <td ng-repeat="cell in row track by $index" class="col-{{$index}}">
+                {{cell == 0 ? "" : cell}}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>

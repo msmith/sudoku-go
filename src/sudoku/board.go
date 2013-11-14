@@ -66,6 +66,32 @@ func NewBoard() Board {
 	return *board
 }
 
+func NewBoardFromValues(rows [DIM2][DIM2]int) Board {
+	b := NewBoard()
+	for rowIdx, row := range rows {
+		for colIdx, v := range row {
+			if v > 0 {
+				i := indexOf(rowIdx, colIdx)
+				b = b.Set(i, v)
+			}
+		}
+	}
+	return b
+}
+
+// Values returns the cell values as a 9x9 array.
+func (b Board) Values() [DIM2][DIM2]int {
+	var values [DIM2][DIM2]int
+	for i, cell := range b {
+		if cell.Solved() {
+			row := i / DIM2
+			col := i % DIM2
+			values[row][col] = cell.Value()
+		}
+	}
+	return values
+}
+
 // ParseBoard returns a new Board by parsing the given string.
 func ParseBoard(str string) (*Board, error) {
 	// remove whitespace
@@ -88,8 +114,8 @@ func ParseBoard(str string) (*Board, error) {
 }
 
 
-// Valid checks that the value in each cell is legal, and does not conflict
-// with the value in other cells.
+// Valid checks that the value in each cell is legal, and that it does not
+// conflict with the value in other cells.
 func (b *Board) Valid() bool {
 	for _, c := range b {
 		if c.Invalid() {
