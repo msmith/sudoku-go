@@ -18,7 +18,7 @@ func (f SingleBoardFile) Board() (*Board, error) {
 	if err != nil {
 		return nil, err
 	}
-	return ParseBoardString(string(bytes))
+	return ParseBoard(string(bytes))
 }
 
 // A file containing multiple boards
@@ -42,7 +42,7 @@ func (f MultipleBoardFile) EachBoard(callback gotBoard) error {
 	scanner := bufio.NewScanner(reader)
 	for scanner.Scan() {
 		boardString := scanner.Text()
-		b, err := ParseBoardString(boardString)
+		b, err := ParseBoard(boardString)
 		if err != nil {
 			return err
 		}

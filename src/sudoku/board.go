@@ -66,8 +66,8 @@ func NewBoard() Board {
 	return *board
 }
 
-// ParseBoardString parses the given string and returns a new Board.
-func ParseBoardString(str string) (*Board, error) {
+// ParseBoard returns a new Board by parsing the given string.
+func ParseBoard(str string) (*Board, error) {
 	// remove whitespace
 	str = whitespace.ReplaceAllString(str, "")
 
@@ -75,9 +75,8 @@ func ParseBoardString(str string) (*Board, error) {
 		return nil, errors.New("line was incorrect length")
 	}
 	board := NewBoard()
-	for i := 0; i < len(str); i++ {
-		ch := str[i : i+1]
-		val, _ := strconv.Atoi(ch)
+	for i, rune := range str {
+		val, _ := strconv.Atoi(string(rune))
 		if val > 0 {
 			board = board.Set(i, val)
 		}
