@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"sudoku"
 	"time"
+
+	"github.com/msmith/sudoku-go/internal/sudoku"
 )
 
 func main() {

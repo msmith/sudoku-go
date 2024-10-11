@@ -113,7 +113,6 @@ func ParseBoard(str string) (*Board, error) {
 	return &board, nil
 }
 
-
 // Valid checks that the value in each cell is legal, and that it does not
 // conflict with the value in other cells.
 func (b *Board) Valid() bool {
@@ -232,17 +231,17 @@ func (b *Board) solve() (Board, bool) {
 /*
 String returns a nicely formatted representation of this Board. For example:
 
-   1 . .   6 . .   2 . .
-   . 6 .   2 . 4   . . .
-   . . 2   . . .   8 . 3
+	1 . .   6 . .   2 . .
+	. 6 .   2 . 4   . . .
+	. . 2   . . .   8 . 3
 
-   7 5 .   . . 8   . 1 .
-   . . .   . 1 .   . . .
-   . 4 .   3 . .   . 5 6
+	7 5 .   . . 8   . 1 .
+	. . .   . 1 .   . . .
+	. 4 .   3 . .   . 5 6
 
-   2 . 4   . . .   1 . .
-   . . .   5 . 3   . 4 .
-   . . 3   . . 9   . . 7
+	2 . 4   . . .   1 . .
+	. . .   5 . 3   . 4 .
+	. . 3   . . 9   . . 7
 */
 func (b *Board) String() string {
 	var buffer bytes.Buffer
@@ -273,7 +272,7 @@ func (b *Board) String() string {
 /*
 ShortString returns a one-line representation of this Board. For example:
 
-   1..6..2...6.2.4.....2...8.375...8.1.....1.....4.3...562.4...1.....5.3.4...3..9..7
+	1..6..2...6.2.4.....2...8.375...8.1.....1.....4.3...562.4...1.....5.3.4...3..9..7
 */
 func (b *Board) ShortString() string {
 	var buffer bytes.Buffer

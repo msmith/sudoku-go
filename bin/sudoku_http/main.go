@@ -6,14 +6,15 @@ import (
 	"log"
 	"net/http"
 	"runtime"
-	"sudoku"
 	"strconv"
+
+	"github.com/msmith/sudoku-go/internal/sudoku"
 )
 
 const (
-	DEFAULT_PORT = "8080"
-	CACHE_SECONDS = 24*60*60 // 24 hours
-	SUDOKU_PATH = "/sudoku/"
+	DEFAULT_PORT  = "8080"
+	CACHE_SECONDS = 24 * 60 * 60 // 24 hours
+	SUDOKU_PATH   = "/sudoku/"
 )
 
 var port string = DEFAULT_PORT
@@ -64,7 +65,7 @@ func solve(w http.ResponseWriter, req *http.Request) {
 	log.Println("Returning:", solution.Solved.ShortString())
 
 	w.Header().Add("Content-Type", "application/json")
-	w.Header().Add("Cache-Control", "max-age=" + strconv.Itoa(CACHE_SECONDS))
+	w.Header().Add("Cache-Control", "max-age="+strconv.Itoa(CACHE_SECONDS))
 	bytes, err := json.Marshal(solution.Solved.Values())
 	if err != nil {
 		httpError(w, "Failed to marshal JSON response", err, http.StatusInternalServerError)

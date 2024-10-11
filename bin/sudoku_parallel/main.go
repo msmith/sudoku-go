@@ -5,8 +5,9 @@ import (
 	"log"
 	"os"
 	"runtime"
-	"sudoku"
 	"time"
+
+	"github.com/msmith/sudoku-go/internal/sudoku"
 )
 
 func solver(boards <-chan *sudoku.Board, solutions chan<- *sudoku.Solution, done chan bool) {

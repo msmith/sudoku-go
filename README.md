@@ -18,12 +18,12 @@ There are 3 variants of the solvers. Make sure to set your `GOPATH` before runni
 
 ### Single puzzle solver
 
-    $ go run sudoku.go puzzles/p1
+    $ go run ./bin/sudoku puzzles/p1
 
 ### Multiple puzzle solvers
 
-	$ go run sudoku_sequential.go sets/hard.gz
-	$ go run sudoku_parallel.go sets/hard.gz
+	$ go run ./bin/sudoku_sequential sets/hard.gz
+	$ go run ./bin/sudoku_parallel sets/hard.gz
 
 # Board files
 

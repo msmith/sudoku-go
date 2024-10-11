@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"sudoku"
+
+	"github.com/msmith/sudoku-go/internal/sudoku"
 )
 
 func main() {
