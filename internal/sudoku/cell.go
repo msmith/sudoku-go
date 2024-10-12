@@ -17,7 +17,7 @@ func NewCell() cell {
 
 func (c *cell) Assign(val int) {
 	c.solved = true
-	for v, _ := range c.possibles {
+	for v := range c.possibles {
 		c.possibles[v] = (v == val-1)
 	}
 }

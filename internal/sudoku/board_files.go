@@ -3,18 +3,17 @@ package sudoku
 import (
 	"bufio"
 	"compress/gzip"
-	"io/ioutil"
 	"os"
 	"regexp"
 )
 
-var whitespace *regexp.Regexp = regexp.MustCompile("\\s+")
+var whitespace *regexp.Regexp = regexp.MustCompile(`\s+`)
 
 // A file containing a single board
 type SingleBoardFile string
 
 func (f SingleBoardFile) Board() (*Board, error) {
-	bytes, err := ioutil.ReadFile(string(f))
+	bytes, err := os.ReadFile(string(f))
 	if err != nil {
 		return nil, err
 	}
